@@ -40,7 +40,15 @@
 
 ---
 
-## 🏃 アプリの動かし方
+## 🌐 公開URL（スマホからすぐに遊べます！）
+
+👉 **[https://bugouringo1574-web.github.io/tokyu-elevator-guide/](https://bugouringo1574-web.github.io/tokyu-elevator-guide/)**
+
+※スマホのSafariやChromeでこのURLを開き、「ホーム画面に追加」すると本物のアプリのように全画面で起動できます！
+
+---
+
+## 🏃 ローカル（PC）での動かし方
 
 プロジェクトディレクトリ：
 `/Users/sanaematusita/.gemini/antigravity-ide/scratch/tokyu-elevator-guide`
