@@ -1,0 +1,17 @@
+{
+  "name": "東急エレベーターGO！",
+  "short_name": "EVガイド",
+  "description": "東急東横線・大井町線 エレベーターナビ＆自由研究ノート",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#DA0442",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

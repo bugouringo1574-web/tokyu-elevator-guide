@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>東急エレベーターGO！ | 東横線・大井町線 バリアフリー＆自由研究ナビ</title>
+  <meta name="description" content="東急東横線・大井町線の駅エレベーターを現在地GPSからワンタップで検索・案内。ベビーカー・車椅子でのおでかけや子供の夏休み自由研究・現地調査に役立つアプリです。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 背景グラデーション装飾 -->
+  <div class="bg-glow bg-glow-toyoko"></div>
+  <div class="bg-glow bg-glow-oimachi"></div>
+
+  <!-- アプリヘッダー -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <span class="icon-lift">🛗</span>
+        </div>
+        <div>
+          <h1 class="brand-title">東急エレベーターGO！</h1>
+          <p class="brand-subtitle">東横線・大井町線 バリアフリーナビ ＆ 自由研究ノート</p>
+        </div>
+      </div>
+      <div class="line-badges">
+        <span class="badge badge-toyoko" title="東急東横線">TY 東横線</span>
+        <span class="badge badge-oimachi" title="東急大井町線">OM 大井町線</span>
+      </div>
+    </div>
+
+    <!-- モード切り替えタブ -->
+    <nav class="nav-tabs" role="tablist">
+      <button id="tab-nav-btn" class="nav-tab active" role="tab" aria-selected="true" data-tab="tab-nav">
+        <span class="tab-icon">🧭</span>
+        <span class="tab-label">GPSナビで探す</span>
+      </button>
+      <button id="tab-stations-btn" class="nav-tab" role="tab" aria-selected="false" data-tab="tab-stations">
+        <span class="tab-icon">🚉</span>
+        <span class="tab-label">駅一覧・構内図</span>
+      </button>
+      <button id="tab-research-btn" class="nav-tab" role="tab" aria-selected="false" data-tab="tab-research">
+        <span class="tab-icon">📝</span>
+        <span class="tab-label">自由研究ノート</span>
+        <span class="research-tag">夏休み応援</span>
+      </button>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <!-- ==============================
+         TAB 1: GPSナビで探す
+         ============================== -->
+    <section id="tab-nav" class="tab-panel active" role="tabpanel">
+      <!-- GPSトリガーカード -->
+      <div class="action-card gps-action-card">
+        <div class="gps-card-header">
+          <div class="gps-pulse-icon">
+            <span class="radar-circle"></span>
+            <span class="radar-dot"></span>
+          </div>
+          <div>
+            <h2 class="card-title">今いる場所から一番近いエレベーター</h2>
+            <p class="card-description">GPSで現在地を取得して、段差のない地上エレベーター出入口へ案内します</p>
+          </div>
+        </div>
+
+        <button id="btn-get-gps" class="btn btn-primary btn-large btn-glow" type="button">
+          <span class="btn-icon">📍</span>
+          <span class="btn-text">現在地からエレベーターを探す</span>
+        </button>
+
+        <div id="gps-status-bar" class="status-bar hidden">
+          <span class="status-indicator"></span>
+          <span id="gps-status-text">位置情報を取得中...</span>
+        </div>
+
+        <!-- テスト用シミュレーター（自宅や遠方でのテスト・事前学習用） -->
+        <div class="simulator-box">
+          <div class="simulator-header">
+            <span class="simulator-badge">🧪 おうちで試せる！</span>
+            <span class="simulator-title">テスト現在地シミュレーター（駅前おためし）</span>
+          </div>
+          <p class="simulator-desc">現在地が遠い時やPCでお試しする時は、下の駅前ボタンを押すとその場所にいるシミュレーションができます。</p>
+          <div class="sim-buttons-grid">
+            <button class="btn-sim" data-lat="35.60742" data-lng="139.66983" data-name="自由が丘駅 正面口前">📍 自由が丘駅前</button>
+            <button class="btn-sim" data-lat="35.64428" data-lng="139.69894" data-name="中目黒駅 正面口前">📍 中目黒駅前</button>
+            <button class="btn-sim" data-lat="35.57591" data-lng="139.65964" data-name="武蔵小杉駅前">📍 武蔵小杉駅前</button>
+            <button class="btn-sim" data-lat="35.60758" data-lng="139.68571" data-name="大岡山駅前">📍 大岡山駅前</button>
+            <button class="btn-sim" data-lat="35.61172" data-lng="139.62674" data-name="二子玉川駅前">📍 二子玉川駅前</button>
+            <button class="btn-sim" data-lat="35.65910" data-lng="139.70275" data-name="渋谷駅 ヒカリエ前">📍 渋谷駅前</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 最寄りエレベーター表示エリア -->
+      <div id="nearest-result-container" class="nearest-container hidden">
+        <div class="nearest-badge-bar">
+          <span class="chip chip-nearest">🎯 最も近いエレベーター</span>
+          <span id="nearest-station-name" class="station-chip">自由が丘駅</span>
+        </div>
+
+        <div class="nearest-hero-card">
+          <div class="hero-top">
+            <div>
+              <div class="hero-category" id="nearest-ev-floor">地上 ⇄ 改札口（1F）</div>
+              <h3 id="nearest-ev-title" class="hero-title">正面口 地上エレベーター＆スロープ</h3>
+              <p id="nearest-ev-address" class="hero-address">正面口タクシーロータリー横</p>
+            </div>
+            <div class="distance-pill">
+              <span id="nearest-ev-distance" class="dist-num">約 65</span>
+              <span class="dist-unit">m</span>
+              <span id="nearest-ev-walk" class="dist-walk">徒歩1分</span>
+            </div>
+          </div>
+
+          <!-- バリアフリー特徴バッジ -->
+          <div id="nearest-features" class="features-list">
+            <!-- JSで動的生成 -->
+          </div>
+
+          <!-- 行き方ステップガイド -->
+          <div class="step-guide">
+            <h4 class="step-guide-title">
+              <span>🚶</span> 改札・ホームへのスムーズな行き方
+            </h4>
+            <ol id="nearest-route-steps" class="steps-list">
+              <!-- JSで動的生成 -->
+            </ol>
+          </div>
+
+          <!-- アクションボタン群 -->
+          <div class="hero-actions">
+            <a id="btn-open-map" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-action btn-map">
+              <span class="btn-icon">🗺️</span>
+              <span>Googleマップでルート案内を開く</span>
+            </a>
+            <button id="btn-view-station-detail" class="btn btn-action btn-secondary" type="button">
+              <span>この駅の全エレベーターを見る ➜</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 近くの他のエレベーター候補 -->
+        <div class="sub-nearest-section">
+          <h4 class="sub-title">周辺の他のエレベーター候補</h4>
+          <div id="other-nearest-list" class="other-cards-grid">
+            <!-- JSで動的生成 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 初期状態の案内ヒント -->
+      <div id="nav-empty-state" class="empty-state-box">
+        <div class="empty-state-icon">📱</div>
+        <h3 class="empty-state-title">ボタンを押してエレベーターを探そう！</h3>
+        <p class="empty-state-text">
+          「現在地から探す」を押すと、あなたの今いる場所から一番近い東急東横線・大井町線の駅エレベーターを自動で見つけます。<br>
+          段差のない道順と、改札・ホームまでのルートをひと目で確認できます。
+        </p>
+      </div>
+    </section>
+
+    <!-- ==============================
+         TAB 2: 駅一覧・構内図
+         ============================== -->
+    <section id="tab-stations" class="tab-panel" role="tabpanel">
+      <!-- フィルター・検索バー -->
+      <div class="filter-card">
+        <div class="filter-header">
+          <h2 class="card-title">駅を選んでエレベーターを調べる</h2>
+          <div class="filter-controls">
+            <button class="filter-chip active" data-line-filter="all">すべて</button>
+            <button class="filter-chip filter-toyoko" data-line-filter="toyoko">東横線 (TY)</button>
+            <button class="filter-chip filter-oimachi" data-line-filter="oimachi">大井町線 (OM)</button>
+          </div>
+        </div>
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="station-search-input" placeholder="駅名・ふりがなで検索（例: じゆうがおか、武蔵小杉）" autocomplete="off">
+        </div>
+      </div>
+
+      <!-- 駅カードリスト -->
+      <div id="stations-list-container" class="stations-grid">
+        <!-- JSで動的生成 -->
+      </div>
+    </section>
+
+    <!-- ==============================
+         TAB 3: 夏休みの自由研究ノート
+         ============================== -->
+    <section id="tab-research" class="tab-panel" role="tabpanel">
+      <!-- 自由研究イントロカード -->
+      <div class="research-hero-banner">
+        <div class="research-banner-badge">夏休みの自由研究・探究学習テーマ</div>
+        <h2 class="research-banner-title">「まちと駅のバリアフリー探検隊」<br>〜誰にとってもやさしい駅エレベーターのひみつ〜</h2>
+        <p class="research-banner-desc">
+          「ベビーカーや車椅子の人は、どうやって電車に乗るんだろう？」「エレベーターはどこにあるの？」<br>
+          駅の現地に行って調べたことを記録して、オリジナルの自由研究レポートを作ろう！
+        </p>
+        <button id="btn-show-research-guide" class="btn btn-highlight" type="button">
+          <span>💡 自由研究の進め方・まとめ方のコツを見る</span>
+        </button>
+      </div>
+
+      <!-- 現地調査入力カード -->
+      <div class="action-card research-input-card">
+        <div class="research-card-title-bar">
+          <h3 class="card-title">📝 現地調査メモをつける</h3>
+          <span class="save-status-indicator" id="save-status">自動保存中</span>
+        </div>
+
+        <div class="form-group">
+          <label for="research-station-select">① 調査した駅を選んでください</label>
+          <select id="research-station-select" class="form-select">
+            <!-- JSで動的生成 -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="research-elevator-select">② 調査したエレベーターを選んでください</label>
+          <select id="research-elevator-select" class="form-select">
+            <!-- JSで動的生成 -->
+          </select>
+        </div>
+
+        <!-- バリアフリーチェックシート -->
+        <div class="form-group">
+          <label class="group-label">③ バリアフリーチェック項目（現地で確認してチェック！）</label>
+          <div id="research-checklist-container" class="checklist-grid">
+            <!-- JSで動的生成 -->
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="research-notes-text">④ 現地で気づいたこと・感想メモ</label>
+          <textarea id="research-notes-text" class="form-textarea" rows="4" placeholder="例：改札からエレベーターまで屋根があって雨でも濡れなかった。北口にはエレベーターがなくて階段だけだったので、正面口のスロープをみんなが使っていた。ベビーカーが2台ゆったり乗れる広さだった。"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button id="btn-save-research" class="btn btn-primary" type="button">
+            <span>💾 調査メモを保存する</span>
+          </button>
+          <button id="btn-clear-research" class="btn btn-subtle" type="button">
+            <span>リセット</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 保存された自由研究データ一覧 -->
+      <div class="saved-research-section">
+        <div class="saved-header">
+          <h3 class="section-title">これまでの調査記録（<span id="saved-count">0</span>件）</h3>
+          <div class="saved-actions">
+            <button id="btn-copy-report" class="btn btn-outline" type="button">
+              <span>📋 レポート用テキストをコピー</span>
+            </button>
+            <button id="btn-print-report" class="btn btn-outline" type="button">
+              <span>🖨️ まとめシートを印刷・PDF保存</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="saved-logs-container" class="saved-logs-grid">
+          <!-- JSで動的生成 -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==============================
+       駅詳細モーダル
+       ============================== -->
+  <div id="modal-station-detail" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span id="modal-station-code" class="station-code">TY07</span>
+          <h3 id="modal-station-name" class="modal-title">自由が丘駅</h3>
+        </div>
+        <button id="btn-close-modal" class="btn-close" aria-label="閉じる">✕</button>
+      </div>
+      <div class="modal-body" id="modal-station-content">
+        <!-- JSで動的挿入 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================
+       自由研究ガイド・まとめ方モーダル
+       ============================== -->
+  <div id="modal-research-guide" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-container modal-large">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="guide-tag">自由研究おたすけガイド</span>
+          <h3 class="modal-title">夏休みの自由研究「駅のエレベーター調査」のまとめ方</h3>
+        </div>
+        <button id="btn-close-guide" class="btn-close" aria-label="閉じる">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="guide-content">
+          <div class="guide-section">
+            <h4>🎯 1. 研究のきっかけ（なぜこのテーマを選んだか？）</h4>
+            <p>
+              「ベビーカーを押しているお母さんや、車椅子の人が駅でエレベーターを探して困っているのを見かけた。」<br>
+              「階段やエスカレーターと違って、エレベーターは奥まった場所にあって分かりにくかったので、どうしてそうなっているのか調べたかった。」など、自分の身近な体験を書こう！
+            </p>
+          </div>
+
+          <div class="guide-section">
+            <h4>🔍 2. 予想（仮説）を立ててみよう</h4>
+            <p>
+              ・「駅によって、1階にホームがある駅と、地下や高いところにある駅でエレベーターの数や場所が違うのではないか？」<br>
+              ・「古い駅と新しい駅で、バリアフリーの工夫が違うのではないか？」
+            </p>
+          </div>
+
+          <div class="guide-section">
+            <h4>🚶 3. 実際に駅へ行って調べよう（フィールドワーク）</h4>
+            <p>
+              このアプリの「自由研究ノート」を使って、東横線・大井町線の駅を回ってみよう！<br>
+              <strong>【調べると面白いポイント】</strong>
+            </p>
+            <ul>
+              <li><strong>出入口のちがい</strong>：正面口にはスロープがあるのに、北口には階段しかない駅（自由が丘など）があるのはなぜ？</li>
+              <li><strong>エレベーターの中のくふう</strong>：鏡がついている理由（車椅子の人がバックで出られるため）、低いボタン、点字表示。</li>
+              <li><strong>駅の構造のちがい</strong>：高架の駅（中目黒・二子玉川）、地下の駅（渋谷・大岡山）、商業ビル直結の駅（武蔵小杉）。</li>
+            </ul>
+          </div>
+
+          <div class="guide-section">
+            <h4>📊 4. 模造紙や画用紙へのまとめ方</h4>
+            <div class="paper-layout-box">
+              <div class="paper-part">① タイトル・名前・学年</div>
+              <div class="paper-part">② 研究のきっかけ・目的</div>
+              <div class="paper-part">③ 調べた駅の地図とエレベーターの場所</div>
+              <div class="paper-part">④ 現地調査の写真やチェックシート</div>
+              <div class="paper-part">⑤ わかったこと・みんなに伝えたい工夫</div>
+              <div class="paper-part">⑥ 自分の作ったプロトタイプアプリの紹介！</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <p>東急東横線・大井町線 エレベーターナビゲーション プロトタイプ</p>
+    <p class="footer-sub">※エレベーターの位置情報は東急電鉄公式構内図等を参考に作成しています。現地調査や最新の運用状況に合わせてアップデートできます。</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

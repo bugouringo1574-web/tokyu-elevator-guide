@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#DA0442"/>
+      <stop offset="100%" stop-color="#F39700"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- 背景角丸スクワークル -->
+  <rect width="512" height="512" rx="115" fill="url(#bgGrad)"/>
+  
+  <!-- エレベーターの箱（ピクトグラム） -->
+  <g filter="url(#shadow)" fill="#ffffff">
+    <!-- 外枠 -->
+    <rect x="96" y="80" width="320" height="352" rx="28" fill="none" stroke="#ffffff" stroke-width="24"/>
+    
+    <!-- 中央の仕切り（ドアの合わせ目） -->
+    <line x1="256" y1="80" x2="256" y2="432" stroke="#ffffff" stroke-width="16" stroke-dasharray="12 12"/>
+    
+    <!-- 上下矢印 -->
+    <!-- 上矢印（東横線カラー） -->
+    <path d="M190 200 L160 150 L130 200 Z" fill="#DA0442"/>
+    <!-- 下矢印（大井町線カラー） -->
+    <path d="M190 230 L160 280 L130 230 Z" fill="#F39700"/>
+    
+    <!-- 人ピクトグラム（車椅子・ベビーカーをイメージ） -->
+    <circle cx="340" cy="180" r="26" fill="#ffffff"/>
+    <path d="M305 230 C305 218 316 210 330 210 L350 210 C364 210 375 218 375 230 L375 320 C375 330 365 340 355 340 L325 340 C315 340 305 330 305 320 Z" fill="#ffffff"/>
+    <!-- 車輪イメージ -->
+    <path d="M310 330 A 32 32 0 1 0 370 330" fill="none" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+  </g>
+</svg>
